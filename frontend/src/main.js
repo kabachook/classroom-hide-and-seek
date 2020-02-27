@@ -1,5 +1,5 @@
 import App from './App.svelte';
-import { makeServer } from "./server.js.js";
+import { makeServer } from "./server.js";
 
 makeServer();
 
