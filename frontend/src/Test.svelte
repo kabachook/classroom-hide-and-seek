@@ -1,14 +1,30 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
+    import { name, address, pattern, sshKey } from './stores.js';
+    import TravisBlock from './TravisBlock.svelte';
 
-    export let sshKey;
-    export let disabled;
-
-	const dispatch = createEventDispatcher();
+    let disabled = false;
+    let promise;
     
-    function submit() {
-		dispatch('submit', {});
-	}
+    function handleTestRequest() {
+		promise = fetch('/api/test', {
+            method: 'POST',
+            body: JSON.stringify(
+                {
+                    name:$name,
+                    address:$address,
+                    pattern:$pattern
+                }
+            )
+        }).then(
+            async result => {
+                if ((await result.json()).result !== true) {
+                    return Promise.reject();
+                }
+                disabled = true;
+            }
+        )
+    }
+    
 </script>
 
 <style>
@@ -23,8 +39,18 @@
 
 <div>
     <span>SSH key: </span>
-    <input id="ssh-box" readonly value={sshKey}>
-    <button on:click|preventDefault={submit} disabled={disabled}>Test</button>
+    <input id="ssh-box" readonly value={$sshKey}>
+    <button on:click|preventDefault={handleTestRequest} disabled={disabled}>Test</button>
+    {#if promise}
+        {#await promise}
+            <p>Testing connection to the repository...</p>
+        {:then result}
+            <p style="color: green">Repository pulled successfully</p>
+            <TravisBlock/>
+        {:catch}
+            <p style="color: red">Failed to pull repository</p>
+        {/await}
+    {/if}
 </div>
 
 

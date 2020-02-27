@@ -1,61 +1,21 @@
 <script>
 	import Form from './Form.svelte';
-	import Test from './Test.svelte';
-	import TravisBlock from './TravisBlock.svelte';
+	import { webhookUrl } from './stores.js';
 
-	async function getWebhook() {
-		let response = await fetch('/api/webhook');
-		return response.json().then(
-			result => webhookUrl = result.webhook
+	let promise;
+
+	function getWebhook() {
+		promise = fetch('/api/webhook')
+		.then(
+			result => result.json()
+		).then(
+			result => {
+				$webhookUrl = result.webhook;
+			}
 		);
 	}
 
-	async function handleFormSubmit(event) {
-		try {
-			let response = await fetch('/api/rule', {
-				method: 'POST',
-				body: JSON.stringify(
-					{
-						name: event.detail.name, 
-						address: event.detail.address, 
-						pattern: event.detail.pattern
-					}
-				)
-			})
-
-			sshKey = (await response.json()).sshKey;
-			generated = true;
-		}
-		catch {
-			error = true;
-		}
-	}
-
-	async function handleTestRequest(event) {
-		try {
-			let response = await fetch('/api/test', {
-				method: 'POST',
-				body: JSON.stringify(
-					{
-						name: event.detail.name, 
-						address: event.detail.address, 
-						pattern: event.detail.pattern
-					}
-				)
-			})
-
-			tested = (await response.json()).result ? true : false;
-		}
-		catch {
-			error = true;
-		}
-	}
-
-	let generated = false, tested = false, error = false;
-	let sshKey = '';
-	let webhookUrl;
-
-	let promise = getWebhook();
+	getWebhook();
 	
 </script>
 
@@ -74,6 +34,11 @@
 		padding: 1rem;
 		width: 50%;
 	}
+
+	:global(button) {
+		width: fit-content;
+	}
+
 </style>
 
 <div id="content-box">
@@ -81,22 +46,11 @@
 	{#await promise}
 		<p>Getting webhook...</p>
 	{:then result}
-		<p style="color: green">Webhook: {result}</p>
-		<Form on:submit={handleFormSubmit} disabled={generated}/>
-		{#if generated}
-			<Test {sshKey} on:submit={handleTestRequest} disabled={tested}/>
-			{#if tested}
-				<p style="color: green">Repository pulled successfully</p>
-				<TravisBlock/>
-			{:else if error}
-			<p style="color: red">Failed to connect to the repository</p>
-			{/if}
-		{:else if error}
-			<p style="color: red">Failed to generate SSH key</p>
-		{/if}
-	{:catch error}
+		<p>Webhook: <span style="color: green">{$webhookUrl}</span></p>
+		<Form/>
+	{:catch}
 		<p style="color: red">Failed to get webhook</p>
-		<button on:click|preventDefault = "{() => promise = getWebhook()}">Try again</button>
+		<button on:click|preventDefault = {getWebhook}>Try again</button>
 	{/await}
 
 </div>
