@@ -56,32 +56,30 @@
 </style>
 
 <form class="generation-form">
-    <label for="name">Enter name</label>
+    <label for="name">Enter rule name</label>
     <input type="text" bind:value={$name} required {disabled}>
 
     <label for="address">Enter repository address</label>
     <input type="text" bind:value={$address} {disabled}>
 
-    <label for="pattern">Enter pattern</label>
+    <label for="pattern">Enter name pattern</label>
     <input type="text" bind:value={$pattern} {disabled}>
 
     <button disabled={disabled || inputError} on:click|preventDefault={handleFormSubmit}>Generate key</button>
-
-    {#if inputError}
-        <div id="form-error-box">Empty fields aren't allowed</div>
-    {/if}
-
-    {#if promise}
-        {#await promise}
-            <p>Generating SSH key...</p>
-        {:then result}
-            <Test {$sshKey}/>
-        {:catch error}
-            <p style="color: red">Failed to generate SSH key</p>
-        {/await}
-    {/if}
-
-    
 </form>
+
+{#if inputError}
+    <div id="form-error-box">Empty fields aren't allowed</div>
+{/if}
+
+{#if promise}
+    {#await promise}
+        <p>Generating SSH key...</p>
+    {:then result}
+        <Test {$sshKey}/>
+    {:catch error}
+        <p style="color: red">Failed to generate SSH key</p>
+    {/await}
+{/if}
 
 

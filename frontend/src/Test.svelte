@@ -41,20 +41,16 @@
     <span>SSH key: </span>
     <input id="ssh-box" readonly value={$sshKey}>
     <button on:click|preventDefault={handleTestRequest} disabled={disabled}>Test</button>
-    {#if promise}
-        {#await promise}
-            <p>Testing connection to the repository...</p>
-        {:then result}
-            <p style="color: green">Repository pulled successfully</p>
-            <TravisBlock/>
-        {:catch}
-            <p style="color: red">Failed to pull repository</p>
-        {/await}
-    {/if}
 </div>
-
-
-
-
-
+    
+{#if promise}
+    {#await promise}
+        <p>Testing connection to the repository...</p>
+    {:then result}
+        <p style="color: green">Repository pulled successfully</p>
+        <TravisBlock/>
+    {:catch}
+        <p style="color: red">Failed to pull repository</p>
+    {/await}
+{/if}
 
