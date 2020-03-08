@@ -19,4 +19,13 @@ async function startServer(): Promise<void> {
   });
 }
 
+process.on("uncaughtException", err => {
+  logger.fatal(err, "Uncaught exception");
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (err, promise) => {
+  logger.fatal({ err, promise }, "Unhandled rejextion");
+});
+
 startServer();
