@@ -3,11 +3,13 @@ import Container from "typedi";
 import GithubWebhookService from "../../services/githubWebhook";
 
 export default (app: Router) => {
-  app.post("/webhook/github", async (req: Request, res: Response) => {
-    const githubEvent = req.body;
-    const githubWebhookService = Container.get(GithubWebhookService);
+  const githubWebhookService = Container.get(GithubWebhookService);
 
-    await githubWebhookService.handleWebhook(githubEvent);
+  app.post("/webhook/github", async (req: Request, res: Response) => {
+    const eventType = req.headers["x-github-event"] as string;
+    const event = req.body;
+
+    await githubWebhookService.handleWebhook(event, eventType);
 
     res.status(200).json({ ok: true });
   });

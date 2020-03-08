@@ -10,9 +10,9 @@ export default class TravisService {
   private organization: string;
   private agent: request.SuperAgentStatic;
 
-  constructor({ travisciKey, organization } = config) {
-    this.token = travisciKey;
-    this.organization = organization;
+  constructor() {
+    this.token = config.travisciKey;
+    this.organization = config.organization;
     this.agent = request
       .agent()
       .use(request => {

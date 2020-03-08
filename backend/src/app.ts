@@ -25,7 +25,8 @@ process.on("uncaughtException", err => {
 });
 
 process.on("unhandledRejection", (err, promise) => {
-  logger.fatal({ err, promise }, "Unhandled rejextion");
+  logger.fatal({ err, promise }, "Unhandled rejection");
+  process.exit(1);
 });
 
 startServer();

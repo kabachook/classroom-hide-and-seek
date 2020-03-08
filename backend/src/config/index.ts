@@ -15,7 +15,10 @@ logger.info(envFound.parsed, "Loaded .env");
 const parsedEnv = {
   port: parseInt(process.env.PORT, 10) || 3000,
   travisciKey: process.env.TRAVISCI_KEY,
-  organization: process.env.ORGANIZATION
+  organization: process.env.ORGANIZATION,
+  redisUrl: process.env.REDIS_URL,
+  sshKey: process.env.SSH_KEY,
+  sshKeyEnvVarName: process.env.SSH_KEY_ENV_VAR_NAME
 };
 
 let willExit = false;

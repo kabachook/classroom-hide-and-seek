@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import logger from "./logger";
 import pino from "express-pino-logger";
+import api from "../api";
 
 export default async function({ app }: { app: express.Application }) {
   app.get("/health", (req, res) => {
@@ -16,7 +17,7 @@ export default async function({ app }: { app: express.Application }) {
     })
   );
 
-  // Routes
+  app.use(api());
 
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     logger.error(err);
