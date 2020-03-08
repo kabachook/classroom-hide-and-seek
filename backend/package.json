@@ -4,8 +4,8 @@
   "description": "CHS backend",
   "main": "./src/app.ts",
   "scripts": {
-    "dev": "tsnd --respawn ./src/app.ts",
-    "build": "tsc"
+    "dev": "node ./node_modules/.bin/tsnd --respawn ./src/app.ts",
+    "build": "node ./node_modules/.bin/tsc"
   },
   "keywords": [],
   "author": "",
@@ -29,9 +29,11 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-pino-logger": "^4.0.0",
     "express-validator": "^6.4.0",
     "pino": "^5.17.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "typedi": "^0.8.0"
   },
   "private": true,
   "prettier": {
@@ -52,6 +54,9 @@
     ],
     "parserOptions": {
       "ecmaVersion": 2018
+    },
+    "rules": {
+      "@typescript-eslint/explicit-function-return-type": "off"
     }
   }
 }
