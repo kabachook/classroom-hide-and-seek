@@ -4,7 +4,7 @@ import { Service, Inject } from "typedi";
 export default class GithubWebhookService {
   constructor(@Inject("logger") private logger) {}
 
-  public async handleWebhook(body: Record<string, any>) {
+  public async handleWebhook(body: Record<string, unknown>) {
     this.logger.info(`GitHub event: ${JSON.stringify(body)}`);
   }
 }
