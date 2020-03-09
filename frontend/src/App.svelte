@@ -2,8 +2,10 @@
 	import Form from './Form.svelte';
 	import TestList from './TestList.svelte';
 	import { webhookUrl } from './stores.js';
+	import { fly } from 'svelte/transition';
 
 	let promise;
+	let hiddenForm = true;
 
 	function getWebhook() {
 		promise = fetch('/api/webhook')
@@ -11,17 +13,25 @@
 			result => result.json()
 		).then(
 			result => {
-				$webhookUrl = result.webhook;
+				if (result.webhook) {
+					$webhookUrl = result.webhook;
+				}
+				else {
+					throw new Error();
+				}
 			}
 		);
 	}
 
-	getWebhook();
+	function addNewTest() {
+		hiddenForm = false;
+		getWebhook();
+	}
 	
 </script>
 
 <style>
-	:global(body) {
+	/* :global(body) {
 		font-family: Arial, Helvetica, sans-serif;
 		padding: 20px;
 		width: 100%;
@@ -32,7 +42,7 @@
 	}
 
 	#content-box {
-        /* border: 1px solid rgb(128, 128, 128); */
+        border: 1px solid rgb(128, 128, 128);
 		display: grid;
 		grid-template-columns: 1fr 4fr;
 		column-gap: 1rem;
@@ -50,28 +60,44 @@
 		font-size: 2rem;
 		margin: 0;
 		padding: 20px;
-	}
+	} */
 
 </style>
 
-<header>
-	<p>🚀 Testing system</p>
+<header class="Header bg-white">
+	<p class="Header-item h1 text-gray-dark">🚀 Testing system</p>
 </header>
 
-<div id="content-box">
+<div id="content-box" class="container d-flex clearfix">
 
-	<TestList/>
+	<TestList on:addNewTest={addNewTest}/>
 
-	<div style="padding: 5px">
-		<p style="font-size: 1.5rem"> Upload new test</p>
-		{#await promise}
-			<p>Getting webhook...</p>
-		{:then result}
-			<p>Webhook: <span style="color: green">{$webhookUrl}</span></p>
-			<Form/>
-		{:catch}
-			<p style="color: red">Failed to get webhook</p>
-			<button on:click|preventDefault = {getWebhook}>Try again</button>
-		{/await}
+	<div class="col-lg-8 col-md-7 col-sm-6 ml-3" hidden={hiddenForm}>
+		<div class="Box Box--condensed">
+			<div class="Box-header d-flex flex-items-center">
+				<div class="h2 text-gray-dark Box-title flex-auto"> Upload new test</div>
+
+				{#if promise}
+
+					{#await promise}
+						<div class="h5 text-right text-yellow">Getting webhook...</div>
+					{:then result}
+						<div class="h5 text-right text-green" in:fly="{{y:20, duration: 300}}">Webhook: {$webhookUrl}</div>
+					{:catch error}
+						<div class="h5 text-right text-red p-1" in:fly="{{y:20, duration: 300}}">
+							Failed to get webhook
+						</div>
+						<button class="btn btn-sm" on:click|preventDefault = {getWebhook}>Try again</button>
+					{/await}
+
+				{/if}
+			</div>
+
+			{#if promise}
+				{#await promise then result}
+					<Form/>
+				{/await}
+			{/if}
+		</div>
 	</div>
 </div>

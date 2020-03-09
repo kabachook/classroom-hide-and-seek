@@ -2,6 +2,7 @@
     import { createEventDispatcher } from 'svelte';
     import { name, address, pattern, sshKey } from './stores.js';
     import Test from './Test.svelte';
+    import { fly, fade } from 'svelte/transition';
 
     let disabled = false;
 
@@ -37,7 +38,7 @@
 </script>
 
 <style>
-    .generation-form {
+    /* .generation-form {
         width: fit-content;
         display: flex;
         flex-direction: column;
@@ -52,25 +53,35 @@
 
     button {
         display: block;
-    }
+    } */
 </style>
 
-<form class="generation-form">
-    <label for="name">Enter rule name</label>
-    <input type="text" bind:value={$name} required {disabled}>
+<div class="Box-body">
+    <form id="generation-form" in:fade>
 
-    <label for="address">Enter repository address</label>
-    <input type="text" bind:value={$address} {disabled}>
+    <dl class="form-group">
+        <dt><label for="name">Enter rule name</label></dt>
+        <dd><input class="form-control" type="text" bind:value={$name} required {disabled}></dd>
+    </dl>
 
-    <label for="pattern">Enter name pattern</label>
-    <input type="text" bind:value={$pattern} {disabled}>
+    <dl class="form-group">
+        <dt><label for="address">Enter repository address</label></dt>
+        <dd><input class="form-control mb-3" type="text" bind:value={$address} {disabled}></dd>
+    </dl>
 
-    <button disabled={disabled || inputError} on:click|preventDefault={handleFormSubmit}>Generate key</button>
+    <dl class="form-group">
+        <label for="pattern">Enter name pattern</label>
+        <input class="form-control mb-3" type="text" bind:value={$pattern} {disabled}>
+    </dl>    
+
+    {#if inputError}
+        <div class="Box-row flash-error" transition:fade="{{delay: 100, duration: 100}}">Empty fields aren't allowed</div>
+    {/if}
+
+    <button class="btn" disabled={disabled || inputError} on:click|preventDefault={handleFormSubmit}>Generate key</button>
 </form>
+</div>
 
-{#if inputError}
-    <div id="form-error-box">Empty fields aren't allowed</div>
-{/if}
 
 {#if promise}
     {#await promise}

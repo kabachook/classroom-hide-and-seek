@@ -28,13 +28,13 @@
 </script>
 
 <style>
-    #ssh-box {
+    /* #ssh-box {
         display: inline-block;
         width: fit-content;
     }
     div {
         padding: 1rem;
-    }
+    } */
 </style>
 
 <div>

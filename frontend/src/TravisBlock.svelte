@@ -13,9 +13,9 @@
 </script>
 
 <style>
-    textarea {
+    /* textarea {
         resize: none;
-    }
+    } */
 </style>
 
 {#await promise}

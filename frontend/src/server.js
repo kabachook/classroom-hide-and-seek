@@ -8,7 +8,19 @@ export function makeServer({ environment = "development" } = {}) {
       this.namespace = "api"
 
       this.get("/webhook", () => {
-        return {webhook: "https://lol.kek.ru"};
+        if (Math.random() > 0.5)
+          return {webhook: "https://lol.kek.ru"};
+      });
+
+      this.get("/tests", () => {
+        return [
+          {name:'test1'},
+          {name:'test2'},
+          {name:'test2-very-long-additionalpart11111111'},
+          {name:'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'},
+          {name:'test-grob'},
+          {name:'wow'}
+        ];
       });
 
       this.post("/rule", (schema, request) => {
