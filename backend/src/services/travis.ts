@@ -5,7 +5,7 @@ import { version } from "../../package.json";
 
 @Service()
 export default class TravisService {
-  private apiUrl = "https://api.travis-cli.com";
+  private apiUrl = "https://api.travis-ci.com";
   private token: string;
   private organization: string;
   private agent: request.SuperAgentStatic;
@@ -44,11 +44,14 @@ export default class TravisService {
     user: string,
     repo: string,
     name: string,
-    value: string
+    value: string,
+    isPublic: boolean = false
   ): Promise<EnvVar> {
-    const res = await this.agent
-      .post(`/repo/${user}%2f${repo}/env_vars`)
-      .send({ "env_var.name": name, "env_var.value": value });
+    const res = await this.agent.post(`/repo/${user}%2f${repo}/env_vars`).send({
+      "env_var.name": name,
+      "env_var.value": value,
+      "env_var.public": isPublic
+    });
     return res.body;
   }
 
@@ -57,7 +60,7 @@ export default class TravisService {
     repo: string,
     limit: number = 1
   ): Promise<Array<Build>> {
-    const res = await this.agent.get(`/repo/${user}%2f${repo}/build`).query({
+    const res = await this.agent.get(`/repo/${user}%2f${repo}/builds`).query({
       limit
     });
     return res.body.builds;

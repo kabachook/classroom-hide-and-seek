@@ -9,6 +9,8 @@ export default class GithubWebhookService {
 
   public async handleWebhook(event: Record<string, unknown>, type: string) {
     logger.info(event, `GitHub event`);
-    this.jobs.newRepoQueue.add({ event, type });
+    if (type === "repository" && event.action === "created") {
+      this.jobs.newRepoQueue.add({ event, type });
+    }
   }
 }
