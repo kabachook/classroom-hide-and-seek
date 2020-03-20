@@ -1,9 +1,15 @@
 import express, { Request, Response, NextFunction } from "express";
+import cors from "cors";
 import logger from "./logger";
 import pino from "express-pino-logger";
 import api from "../api";
 
 export default async function({ app }: { app: express.Application }) {
+  app.use(
+    cors({
+      origin: true
+    })
+  );
   app.get("/health", (req, res) => {
     res.status(200).end();
   });
