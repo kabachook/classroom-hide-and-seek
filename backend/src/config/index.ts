@@ -6,8 +6,9 @@ process.env.NODE_ENV = process.env.NODE_ENV || "development";
 
 const envFound = dotenv.config({ path: resolve(__dirname, "../../.env") });
 if (!envFound || envFound.error) {
-  if (envFound.error) logger.error(envFound.error);
-  throw new Error("⚠ Couldn't find .env file!");
+  // if (envFound.error) logger.error(envFound.error);
+  // throw new Error("⚠ Couldn't find .env file!");
+  logger.error("⚠ Couldn't find .env file!", envFound.error || "")
 }
 
 logger.info(envFound.parsed, "Loaded .env");
