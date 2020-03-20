@@ -40,7 +40,7 @@ export default class Jobs {
             user,
             repo,
             config.sshKeyEnvVarName,
-            sshKey
+            Buffer.from(sshKey).toString("base64")
           );
           logger.info(`Pushed ssh key for ${user}/${repo}`);
         } catch (err) {

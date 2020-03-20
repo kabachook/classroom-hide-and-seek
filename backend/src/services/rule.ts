@@ -44,7 +44,7 @@ export default class RuleService {
     return (
       await this.keyRepository.find({
         where: {
-          _id: {
+          "rule.id": {
             $eq: new ObjectId(id)
           }
         }
