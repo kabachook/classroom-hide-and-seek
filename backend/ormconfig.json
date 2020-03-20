@@ -1,6 +1,6 @@
 {
     "type": "mongodb",
-    "url": "mongo://localhost:27017",
+    "url": "mongodb://localhost:27017",
     "useNewUrlParser": true,
     "entities": ["src/entity/*.ts"],
     "migrations": ["src/migration/*.ts"],
