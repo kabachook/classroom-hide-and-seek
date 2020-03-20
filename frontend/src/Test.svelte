@@ -1,6 +1,7 @@
 <script>
     import { name, address, pattern, sshKey } from './stores.js';
     import TravisBlock from './TravisBlock.svelte';
+    import { fly, fade } from 'svelte/transition';
 
     let disabled = false;
     let promise;
@@ -24,33 +25,28 @@
             }
         )
     }
-    
 </script>
 
-<style>
-    /* #ssh-box {
-        display: inline-block;
-        width: fit-content;
-    }
-    div {
-        padding: 1rem;
-    } */
-</style>
-
-<div>
-    <span>SSH key: </span>
-    <input id="ssh-box" readonly value={$sshKey}>
-    <button on:click|preventDefault={handleTestRequest} disabled={disabled}>Test</button>
+<div class="Box-row d-flex flex-items-center" in:fade="{{delay: 100, duration: 100}}">
+    <label class="m-1">SSH key: </label>
+    <input class="form-control" readonly value={$sshKey}>
+    <button class="btn btn-small m-1" on:click|preventDefault={handleTestRequest} disabled={disabled}>Test</button>
 </div>
     
 {#if promise}
     {#await promise}
-        <p>Testing connection to the repository...</p>
+        <div class="Box-row">
+            <p class="flash" in:fade="{{delay: 100, duration: 100}}">Testing connection to the repository...</p>
+        </div>
     {:then result}
-        <p style="color: green">Repository pulled successfully</p>
+        <div class="Box-row">
+            <p class="flash flash-success" in:fade="{{delay: 100, duration: 100}}">Repository pulled successfully</p>
+        </div>
         <TravisBlock/>
     {:catch}
-        <p style="color: red">Failed to pull repository</p>
+        <div class="Box-row">
+            <p class="flash flash-error" in:fade="{{delay: 100, duration: 100}}">Failed to pull repository</p>
+        </div>
     {/await}
 {/if}
 

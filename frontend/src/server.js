@@ -8,7 +8,7 @@ export function makeServer({ environment = "development" } = {}) {
       this.namespace = "api"
 
       this.get("/webhook", () => {
-        if (Math.random() > 0.5)
+        // if (Math.random() > 0.5)
           return {webhook: "https://lol.kek.ru"};
       });
 
@@ -28,7 +28,7 @@ export function makeServer({ environment = "development" } = {}) {
         return {sshKey: 'ssh@'+requestObject.name+':'+requestObject.address+':'+requestObject.pattern};
       });
 
-      this.post("/test", (request) => {
+      this.post("/test", async (request) => {
         return {result: true};
       });
 

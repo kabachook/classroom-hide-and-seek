@@ -17,7 +17,7 @@
 					$webhookUrl = result.webhook;
 				}
 				else {
-					throw new Error();
+					return Promise.reject();
 				}
 			}
 		);
@@ -30,40 +30,6 @@
 	
 </script>
 
-<style>
-	/* :global(body) {
-		font-family: Arial, Helvetica, sans-serif;
-		padding: 20px;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-content: center;
-	}
-
-	#content-box {
-        border: 1px solid rgb(128, 128, 128);
-		display: grid;
-		grid-template-columns: 1fr 4fr;
-		column-gap: 1rem;
-
-		padding: 0.5rem;
-		width: 100%;
-		height: 95%;
-	}
-
-	:global(button) {
-		width: fit-content;
-	}
-
-	header > p {
-		font-size: 2rem;
-		margin: 0;
-		padding: 20px;
-	} */
-
-</style>
-
 <header class="Header bg-white">
 	<p class="Header-item h1 text-gray-dark">🚀 Testing system</p>
 </header>
@@ -72,7 +38,7 @@
 
 	<TestList on:addNewTest={addNewTest}/>
 
-	<div class="col-lg-8 col-md-7 col-sm-6 ml-3" hidden={hiddenForm}>
+	<div class="col-lg-7 col-md-6 col-sm-5 ml-3 mr-3" hidden={hiddenForm}>
 		<div class="Box Box--condensed">
 			<div class="Box-header d-flex flex-items-center">
 				<div class="h2 text-gray-dark Box-title flex-auto"> Upload new test</div>
