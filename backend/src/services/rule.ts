@@ -37,6 +37,10 @@ export default class RuleService {
     return this.ruleRepository.find({});
   }
 
+  public async findRuleById(id: string): Promise<Rule> {
+    return this.ruleRepository.findOne(id);
+  }
+
   public async createRule(
     rule: Pick<Rule, "name" | "gitUrl" | "pattern">
   ): Promise<Rule> {

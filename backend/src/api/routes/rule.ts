@@ -24,4 +24,14 @@ export default (app: Router) => {
       data: rule
     });
   });
+
+  app.get("/rule/:id", async (req: Request, res: Response) => {
+    const id = req.params["id"];
+    const rule = await ruleService.findRuleById(id);
+
+    res.status(200).json({
+      ok: true,
+      data: rule
+    });
+  });
 };
