@@ -2,7 +2,7 @@
 	import Form from './Form.svelte';
 	import TestList from './TestList.svelte';
 	import Rule from './Rule.svelte';
-	import { webhookUrl } from './stores.js';
+	import { webhookUrl, remoteServerUrl } from './stores.js';
 	import { fly, fade } from 'svelte/transition';
 
 	let promise;
@@ -26,18 +26,28 @@
 		);
 	}
 
+	// (async () => {let kek = await (await fetch(`${$remoteServerUrl}/rules`)).json(); console.log(kek)})(); 
+
 	function addNewTest() {
 		formBoxHidden = false;
 		ruleBoxHidden = true;
 		getWebhook();
 	}
 
-	function showRule(event) {
+	async function showRule(event) {
 		formBoxHidden = true;
 		
-		activeRuleData = fetch(`/api/rule/${event.detail.name}`)
+		activeRuleData = fetch(`${$remoteServerUrl}/rule/${event.detail.id}`)
 		.then(
 			result => result.json()
+		)
+		.then(
+			result => {
+				if (!result.ok) {
+					return Promise.reject();
+				}
+				return result.data;
+			}
 		);
 
 		ruleBoxHidden = false;

@@ -2,9 +2,9 @@
     import { fly, fade } from 'svelte/transition';
 
     export let name;
-    export let url;
+    export let gitUrl;
     export let date;
-    export let namePattern;
+    export let pattern;
     export let sshKey;
 </script>
 
@@ -13,19 +13,19 @@
 </div>
 <div class="Box-row d-flex flex-items-center">
     <label class="m-1">Git URL:</label>
-    <span>{url}</span>
+    <span class="break-word">{gitUrl}</span>
 </div>
 <div class="Box-row d-flex flex-items-center">
     <label class="m-1">Uploading date:</label>
-    <span>{date}</span>
+    <span class="break-word">{date}</span>
 </div>
 <div class="Box-row d-flex flex-items-center">
     <label class="m-1">Name pattern:</label>
-    <span>{namePattern}</span>
+    <span class="break-word">{pattern}</span>
 </div>
 <div class="Box-row d-flex flex-items-center">
     <label class="m-1">SSH key:</label>
-    <span>{sshKey}</span>
+    <span class="break-word">{sshKey}</span>
 </div>
 
 

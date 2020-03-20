@@ -1,7 +1,7 @@
 import App from './App.svelte';
-import { makeServer } from "./server.js";
+// import { makeServer } from "./server.js";
 
-makeServer();
+// makeServer();
 
 var app = new App({
 	target: document.body

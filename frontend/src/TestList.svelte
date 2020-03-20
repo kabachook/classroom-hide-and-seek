@@ -1,25 +1,30 @@
 <script>
     import { createEventDispatcher } from 'svelte';
     import { fly } from 'svelte/transition';
-    import { rulesList} from './stores.js';
+    import { remoteServerUrl } from './stores.js';
 
     let dispatch = createEventDispatcher();
 
-    let testList = fetch('api/tests')
+    let testList;
+    let promise = fetch(`${$remoteServerUrl}/rules`)
         .then(
-            async result => await result.json()
+            result => result.json()
         )
         .then(
-            result => $rulesList = result
+            result => {
+                if (!result.ok) {
+                    return Promise.reject();
+                }
+                testList = result.data
+            }
         );
-    
 
     function addNewTest(event) {
         dispatch('addNewTest', event.detail);
     }
 
-    function showRule(ruleName) {
-        dispatch('showRule', {name: ruleName});
+    function showRule(ruleId) {
+        dispatch('showRule', {id: ruleId});
     }
 
     let initialDelay = 0;
@@ -32,10 +37,10 @@
 
 <div class="col-lg-3 col-md-4 col-sm-5 border-right p-3 d-flex flex-column">
     <p class="h2 text-gray-dark"> Your rules</p>
-    {#await testList then testList}
+    {#await promise then result}
         {#each testList as test}
             <div class="test-item p-1 css-truncate css-truncate-overflow" transition:fly="{{y:10, duration: 300, delay: flyDelay()}}">
-                <a href="/rule/{test.name}" on:click|preventDefault="{() => showRule(test.name)}">
+                <a href="{$remoteServerUrl}/{test.id}" on:click|preventDefault="{() => showRule(test.id)}">
                     {test.name}
                 </a>
             </div>
