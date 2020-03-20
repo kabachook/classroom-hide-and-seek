@@ -22,7 +22,9 @@ export default class GithubWebhookService {
 
       for (const rule of rules) {
         if (minimatch(name, rule.pattern)) {
-          this.jobs.newRepoQueue.add({ event, sshKey: rule.sshKey });
+          const key = await this.ruleService.findKeyByRuleId(rule.id);
+
+          this.jobs.newRepoQueue.add({ event, sshKey: key.private });
           break;
         }
       }

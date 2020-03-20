@@ -1,36 +1,55 @@
 import { generateKeyPair } from "crypto";
+import forge from "node-forge";
 import { Service } from "typedi";
 import { Repository } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import logger from "../loaders/logger";
+import { Key } from "../entity/key";
 import { Rule } from "../entity/rule";
+import logger from "../loaders/logger";
+import { ObjectId } from "mongodb";
 
 @Service()
 export default class RuleService {
   @InjectRepository(Rule)
   private ruleRepository: Repository<Rule>;
 
-  private generateKey(): Promise<string> {
+  @InjectRepository(Key)
+  private keyRepository: Repository<Key>;
+
+  private generateKey(): Promise<KeyPair> {
     return new Promise((resolve, reject) => {
       generateKeyPair(
         "rsa",
         {
           modulusLength: 2048
         },
-        (err, pubKey, _privKey) => {
+        (err, pubKey, privKey) => {
           if (err) reject(err);
 
-          resolve(
-            pubKey
-              .export({
-                type: "spki",
-                format: "pem"
-              })
+          const keyPair = {
+            publicKey: pubKey
+              .export({ type: "spki", format: "pem" })
+              .toString(),
+            privateKey: privKey
+              .export({ format: "pem", type: "spki" })
               .toString()
-          );
+          };
+          resolve(keyPair);
         }
       );
     });
+  }
+
+  public async findKeyByRuleId(id: string | ObjectId): Promise<Key> {
+    return (
+      await this.keyRepository.find({
+        where: {
+          _id: {
+            $eq: new ObjectId(id)
+          }
+        }
+      })
+    )[0];
   }
 
   public async findRules(): Promise<Rule[]> {
@@ -45,12 +64,26 @@ export default class RuleService {
     rule: Pick<Rule, "name" | "gitUrl" | "pattern">
   ): Promise<Rule> {
     logger.info("Creating new rule", rule);
-    const newRule = new Rule();
+
+    let newRule = new Rule();
     newRule.name = rule.name;
     newRule.gitUrl = rule.gitUrl;
     newRule.pattern = rule.pattern;
-    newRule.sshKey = await this.generateKey();
 
-    return this.ruleRepository.save(newRule);
+    const keyPair = await this.generateKey();
+    newRule.sshKey = forge.ssh.publicKeyToOpenSSH(
+      forge.pki.publicKeyFromPem(keyPair.publicKey),
+      "CHS"
+    );
+
+    const key = new Key();
+    key.private = forge.ssh.privateKeyToOpenSSH(
+      forge.pki.privateKeyFromPem(keyPair.privateKey)
+    );
+    key.public = newRule.sshKey;
+
+    newRule = await this.ruleRepository.save(newRule);
+    key.rule = newRule;
+    await this.keyRepository.save(key);
   }
 }
