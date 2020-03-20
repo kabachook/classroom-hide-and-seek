@@ -39,7 +39,7 @@
 </script>
 
 <div class="Box-body">
-    <form class="container d-flex flex-column flex-items-center" in:fade>
+    <form class="container d-flex flex-column flex-items-center" in:fade="{{delay: 100, duration: 100}}">
 
         <dl class="form-group width-full">
             <dt><label for="name">Enter rule name</label></dt>
@@ -58,7 +58,7 @@
     </form>
     {#if inputError}
         <div class="Box-row">
-            <div class="flash flash-error p-1" transition:fade="{{delay: 100, duration: 100}}">Empty fields aren't allowed</div>
+            <div class="flash flash-error p-1" transition:fade|local="{{delay: 100, duration: 100}}">Empty fields aren't allowed</div>
         </div>
     {/if}
 </div>

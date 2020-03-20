@@ -12,6 +12,11 @@ export function makeServer({ environment = "development" } = {}) {
           return {webhook: "https://lol.kek.ru"};
       });
 
+      this.get("/rule/:id", (schema, request) => {
+        // if (Math.random() > 0.5)
+          return {name: request.params.id + "__lol", date: "12.11.2011"};
+      });
+
       this.get("/tests", () => {
         return [
           {name:'test1'},
