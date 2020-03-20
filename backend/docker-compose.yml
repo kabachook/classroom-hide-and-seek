@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  chs-bakcend:
+  chs-backend:
     build: .
     ports:
       - "5000:3000"
