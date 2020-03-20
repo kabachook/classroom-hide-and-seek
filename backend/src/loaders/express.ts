@@ -19,7 +19,7 @@ export default async function({ app }: { app: express.Application }) {
 
   app.use(api());
 
-  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
     logger.error(err);
     res.status(500).json({ ok: false, error: err });
   });
