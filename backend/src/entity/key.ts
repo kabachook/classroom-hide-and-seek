@@ -1,4 +1,11 @@
-import { Entity, ObjectID, ObjectIdColumn, Column } from "typeorm";
+import {
+  Entity,
+  ObjectID,
+  ObjectIdColumn,
+  Column,
+  OneToOne,
+  JoinColumn
+} from "typeorm";
 import { Rule } from "./rule";
 
 @Entity()
@@ -12,6 +19,7 @@ export class Key {
   @Column()
   public: string;
 
-  @Column(type => Rule)
+  @OneToOne(type => Rule)
+  @JoinColumn({ name: "rule" })
   rule: Rule;
 }
