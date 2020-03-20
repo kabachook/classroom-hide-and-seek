@@ -31,7 +31,7 @@ export default class RuleService {
               .export({ type: "spki", format: "pem" })
               .toString(),
             privateKey: privKey
-              .export({ format: "pem", type: "spki" })
+              .export({ type: "pkcs8", format: "pem" })
               .toString()
           };
           resolve(keyPair);
@@ -85,5 +85,6 @@ export default class RuleService {
     newRule = await this.ruleRepository.save(newRule);
     key.rule = newRule;
     await this.keyRepository.save(key);
+    return newRule;
   }
 }
