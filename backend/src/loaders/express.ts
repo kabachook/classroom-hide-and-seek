@@ -10,12 +10,13 @@ export default async function({ app }: { app: express.Application }) {
       origin: true
     })
   );
-  app.get("/health", (req, res) => {
-    res.status(200).end();
-  });
 
   app.enable("trust proxy");
   app.use(express.json());
+
+  app.get("/health", (req, res) => {
+    res.status(200).end();
+  });
 
   app.use(
     pino({
