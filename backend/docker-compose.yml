@@ -4,9 +4,18 @@ services:
   chs-bakcend:
     build: .
     ports:
-      - "3000:3000"
+      - "5000:3000"
+    env_file: 
+      - .env
 
   redis:
     image: redis:alpine
-    ports:
-      - "6379:6379"
+    volumes: 
+      - ./redis:/data
+    cmd: "redis-server --appendonly yes"
+
+  mongo:
+    image: mongo
+    volumes: 
+      - ./mongo:/var/db
+    
