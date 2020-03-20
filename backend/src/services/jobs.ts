@@ -3,6 +3,7 @@ import Bull from "bull";
 import config from "../config";
 import TravisService from "./travis";
 import logger from "../loaders/logger";
+import { WebhookPayload } from "../types/github";
 
 @Service()
 export default class Jobs {
@@ -23,7 +24,11 @@ export default class Jobs {
       logger.error("Redis connection closed")
     );
     this.newRepoQueue.process(async (job: Bull.Job) => {
-      const { event, retry } = job.data;
+      const {
+        event,
+        sshKey,
+        retry
+      }: { event: WebhookPayload; sshKey: string; retry: number } = job.data;
       const repo = event.repository.name;
       const user = event.repository.owner.login;
 
@@ -35,7 +40,7 @@ export default class Jobs {
             user,
             repo,
             config.sshKeyEnvVarName,
-            config.sshKey
+            sshKey
           );
           logger.info(`Pushed ssh key for ${user}/${repo}`);
         } catch (err) {
