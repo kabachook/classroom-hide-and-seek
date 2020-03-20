@@ -6,23 +6,37 @@
             {}
         )
     }).then(
-        result => result.json().then(
-            result => yaml = result.code
-        )
+        result => result.json()
+    )
+    .then(
+        result => {
+            if (!result.code) {
+                return Promise.reject();
+            }
+            yaml = result.code;
+        }
     );
 </script>
 
 <style>
-    /* textarea {
+    textarea {
         resize: none;
-    } */
+    }
 </style>
 
-{#await promise}
-	<p>Generating code...</p>
-{:then result}
-	<p>Insert this code in <code>travis.yml</code>:</p>
-    <textarea id="travis" cols="30" rows="8" readonly>{yaml}</textarea>
-{:catch error}
-	<p style="color: red">Failed to generate yaml code</p>
-{/await}
+<div class="Box-body">
+    {#await promise}
+        <div class="Box-row">
+            <p class="flash">Generating code...</p>
+        </div>
+    {:then result}
+        <div class="Box-row">
+            <label>Insert this code in <code>.travis.yml</code>:</label>
+            <textarea class="form-control width-full" readonly>{yaml}</textarea>
+        </div>
+    {:catch error}
+        <div class="Box-row">
+            <p class="flash flash-error">Failed to generate yaml code</p>
+        </div>
+    {/await}
+</div>
